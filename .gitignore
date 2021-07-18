@@ -1,0 +1,7 @@
+client_secrets.json
+oauth_client.json
+yt-find-replace
+run.sh
+test*.json
+.vscode
+*.code-workspace
