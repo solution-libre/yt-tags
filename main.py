@@ -80,12 +80,16 @@ class YouTubeHandler(object):
       return response
 
 def menu():
+  print("\n- - - - - -\n")
   find_text = input("Find: ")
+  print("")
   replace_text = input("Replace: ")
+  print("\n- - - - - -\n")
 
   yt = YouTubeHandler()
   yt.desc_find_replace(find_text, replace_text)
 
+  print("\n- - - - - -\n")
   print("Done! thanks.")
 
 def main():

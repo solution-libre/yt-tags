@@ -16,9 +16,24 @@ pip install -r requirements.txt
 ## Connect to the YouTube Api
 1. Enable the [YouTube Data API v3](https://console.cloud.google.com/apis/library?authuser=1&project=yt-search-replace&supportedpurview=project&q=youtube)
 2. Create a new PROJECT, I called mine yt-find-replace
-3. Visit `APIs & Services > Credentials > Create credentials`, and generate a OAuth 2.0 Client ID.  Select `Desktop App` as the Application type.
+3. Visit `APIs & Services > Credentials > Create credentials`, and generate a OAuth 2.0 Client ID.  Select `Desktop App` as the Application type.  Download it, rename it to `oauth_client.json`, and save it in the root of this repo.   It should look something like this:
+```
+{
+  "installed": {
+    "client_id": "123456.googleusercontent.com",
+    "project_id": "xxx-123",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_secret": "123456",
+    "redirect_uris": [
+      ...
+    ]
+  }
+}
+```
 4. You should also set up the OAuth consent screen, leave it as "testing", and add your YouTube email to the test users.
-5. Download the service account credentials, rename it as `client_secrets.json` and save it in the root of this repo.  It should look something like this:
+5. Create a new Service Account key from `IAM & Admin > Service Accounts > Keys`, rename it as `client_secrets.json` and save it in the root of this repo.  It should look something like this:
 ```
 {
   "type": "service_account",
