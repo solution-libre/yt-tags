@@ -23,6 +23,7 @@ api_service_name = "youtube"
 api_version = "v3"
 client_secrets_file = "oauth_client.json"
 
+new_line = "\n- - - - - -\n"
 class YouTubeHandler(object):
     def __init__(self):
       # Get credentials and create an API client
@@ -33,25 +34,21 @@ class YouTubeHandler(object):
       self.channel_info = self.get_channel_info()
 
     def get_channel_info(self):
-      request = self.yt.channels().list(
-        part="snippet,contentDetails,statistics",
-        mine=True
-      )
-      response = request.execute()
-
-      return response
+        request = self.yt.channels().list(
+          part="snippet,contentDetails,statistics",
+          mine=True
+        )
+        return request.execute()
 
     def get_playlist_videos(self, next_page_token=None):
-      upload_playlist = self.channel_info["items"][0]["contentDetails"]["relatedPlaylists"]["uploads"]
-      request = self.yt.playlistItems().list(
-        part="snippet",
-        playlistId=upload_playlist,
-        maxResults=50,
-        pageToken=next_page_token
-      )
-      response = request.execute()
-
-      return response
+        upload_playlist = self.channel_info["items"][0]["contentDetails"]["relatedPlaylists"]["uploads"]
+        request = self.yt.playlistItems().list(
+          part="snippet",
+          playlistId=upload_playlist,
+          maxResults=50,
+          pageToken=next_page_token
+        )
+        return request.execute()
 
     def desc_find_replace(self, find_text, replace_text):
       response = self.get_playlist_videos()
@@ -63,33 +60,31 @@ class YouTubeHandler(object):
         response = self.get_playlist_videos(response["nextPageToken"])
 
     def replace_video_description(self, snippet, find_text, replace_text):
-      request = self.yt.videos().update(
-        part="snippet",
-        body={
-          "id": snippet["resourceId"]["videoId"],
-          "snippet": {
-            "title": snippet["title"],
-            "categoryId": "24",
-            "defaultLanguage": "en",
-            "description": snippet["description"].replace(find_text, replace_text)
+        request = self.yt.videos().update(
+          part="snippet",
+          body={
+            "id": snippet["resourceId"]["videoId"],
+            "snippet": {
+              "title": snippet["title"],
+              "categoryId": "24",
+              "defaultLanguage": "en",
+              "description": snippet["description"].replace(find_text, replace_text)
+            }
           }
-        }
-      )
-      response = request.execute()
-
-      return response
+        )
+        return request.execute()
 
 def menu():
-  print("\n- - - - - -\n")
+  print(new_line)
   find_text = input("Find: ")
   print("")
   replace_text = input("Replace: ")
-  print("\n- - - - - -\n")
+  print(new_line)
 
   yt = YouTubeHandler()
   yt.desc_find_replace(find_text, replace_text)
 
-  print("\n- - - - - -\n")
+  print(new_line)
   print("Done! thanks.")
 
 def main():
