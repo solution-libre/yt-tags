@@ -58,13 +58,13 @@ class YouTubeHandler(object):
       while ("nextPageToken" in response):
         for item in response["items"]:
           if find_text in item["snippet"]["description"]:
-            print("updating video: " + item["snippet"]["title"])
+            print("updating video: " + item["snippet"]["title"] + " https://www.youtube.com/watch?v=" + item["snippet"]["resourceId"]["videoId"])
             self.replace_video_description(item["snippet"], find_text, replace_text)
         response = self.get_playlist_videos(response["nextPageToken"])
 
       for item in response["items"]:
           if find_text in item["snippet"]["description"]:
-            print("updating video: " + item["snippet"]["title"])
+            print("updating video: " + item["snippet"]["title"] + " https://www.youtube.com/watch?v=" + item["snippet"]["resourceId"]["videoId"])
             self.replace_video_description(item["snippet"], find_text, replace_text)
 
     def replace_video_description(self, snippet, find_text, replace_text):
