@@ -1,6 +1,6 @@
-# YT Find & Replace <!-- omit in toc -->
+# YT default tags
 
-## Table of Contents <!-- omit in toc -->
+## Table of Contents
 
 * [Requirements](#requirements)
 * [Connect to the YouTube Api](#connect-to-the-youtube-api)

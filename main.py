@@ -1,10 +1,5 @@
 #!/usr/bin/env python3
 
-# =======================================
-# =    YT description find + replace    =
-# =   https://twitter.com/telepathics   =
-# =======================================
-
 # -*- coding: utf-8 -*-
 
 import os
@@ -61,29 +56,28 @@ class YouTubeHandler(object):
         )
         return request.execute()['items'][0]
 
-    def desc_find_replace(self, find_text, replace_text):
+    def set_tags(self, tags):
       response = self.get_playlist_videos()
 
       print(new_line)
 
       while ("nextPageToken" in response):
         for item in response["items"]:
-          description = "\n".join(item["snippet"]["description"].splitlines())
-          if find_text in description:
-            video = self.get_video(item["snippet"]["resourceId"]["videoId"])
-            print("updating video: " + video["snippet"]["title"] + " https://www.youtube.com/watch?v=" + video["id"])
-            self.replace_video_description(video, find_text, replace_text)
+          video = self.get_video(item["snippet"]["resourceId"]["videoId"])
+          print("updating video: " + video["snippet"]["title"] + " https://www.youtube.com/watch?v=" + video["id"])
+          self.add_missing_tags(video, tags)
         response = self.get_playlist_videos(response["nextPageToken"])
 
       for item in response["items"]:
-        description = "\n".join(item["snippet"]["description"].splitlines())
-        if find_text in description:
           video = self.get_video(item["snippet"]["resourceId"]["videoId"])
           print("updating video: " + video["snippet"]["title"] + " https://www.youtube.com/watch?v=" + video["id"])
-          self.replace_video_description(video, find_text, replace_text)
+          self.add_missing_tags(video, tags)
 
-    def replace_video_description(self, video, find_text, replace_text):
-      video["snippet"]["description"] = ("\n".join(video["snippet"]["description"].splitlines())).replace(find_text, replace_text)
+    def add_missing_tags(self, video, tags):
+      if 'tags' in video["snippet"]:
+        video["snippet"]["tags"] = list(set(video["snippet"]["tags"]) | set(tags))
+      else:
+        video["snippet"]["tags"] = tags
       body={
         "id": video["id"],
         "snippet": video["snippet"]
@@ -98,14 +92,12 @@ class YouTubeHandler(object):
         return request.execute()
 
 def menu():
-  print(new_line + 'Enter your search phrase: (Press CTRL + D (Unix) or CTRL + Z (Windows) to validate)')
-  find_text = sys.stdin.read()
-  print(new_line + 'Enter your replacement phrase: (Press CTRL + D (Unix) or CTRL + Z (Windows) to validate)')
-  replace_text = sys.stdin.read()
+  print(new_line + 'Enter your default tags: (One by line and press CTRL + D (Unix) or CTRL + Z (Windows) to validate)')
+  tags = sys.stdin.read().splitlines()
   print(new_line)
 
   yt = YouTubeHandler()
-  yt.desc_find_replace(find_text, replace_text)
+  yt.set_tags(tags)
 
   print(new_line)
   print("Done! thanks.")
